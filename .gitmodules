@@ -1,0 +1,4 @@
+[submodule "lego"]
+	path = lego
+	url = ../../fefa4ka/eer-components.git
+	branch = master
