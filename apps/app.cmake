@@ -1,15 +1,38 @@
-add_executable(${PROJECT_NAME} ${PROJECT_NAME}.c)
-target_link_libraries(${PROJECT_NAME} ${${PROJECT_NAME}_LIBS})
+add_executable(${PROJECT_NAME} ${PROJECT_NAME}.c ${SOURCES})
+
+if(CMAKE_CROSSCOMPILING AND CMAKE_BUILD_TYPE MATCHES Debug)
+    add_custom_command(
+        TARGET ${PROJECT_NAME}
+        PRE_LINK
+        COMMAND grep "^[^\\#].*\$ " ${PROJECT_NAME}.i > ${PROJECT_NAME}.eu.c
+        COMMENT "Cleaning preprocessed file"
+        DEPENDS ${PROJECT_NAME}.i
+        )
+
+    add_custom_command(
+        TARGET ${PROJECT_NAME}
+        PRE_LINK
+        COMMAND clang-format ${PROJECT_NAME}.eu.c > ${PROJECT_NAME}.e.c
+        COMMENT "Cleaning preprocessed file"
+        DEPENDS ${PROJECT_NAME}.eu.c
+        )
+endif()
+
+set(HAL_LIBS_DEFS ${HAL_LIBS})
+list(TRANSFORM HAL_LIBS_DEFS PREPEND -DHAL_)
+list(TRANSFORM HAL_LIBS PREPEND ${EER_HAL_LIB}_)
+add_definitions(${HAL_LIBS_DEFS})
+target_link_libraries(${PROJECT_NAME} ${LIBS} ${HAL_LIBS})
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
 configure_file(${EER_LIB_PATH}/include/version.h.in version.h)
 
 # TODO: calculate size
-get_property(${PROJECT_NAME}_LINKED_LIBS TARGET ${PROJECT_NAME} PROPERTY LINK_INTERFACE_LIBRARIES)
-add_custom_target(${PROJECT_NAME}.usage
-    ${EER_LIB_PATH}/eer-nm ${PROJECT_NAME} ${${PROJECT_NAME}_LINKED_LIBS}
-    DEPENDS ${PROJECT_NAME}
-)
+# get_property(${project_name}_linked_libs target ${project_name} property link_interface_libraries)
+# add_custom_target(${project_name}.usage
+#     ${EER_LIB_PATH}/eer-nm ${PROJECT_NAME} ${${PROJECT_NAME}_LINKED_LIBS}
+#     DEPENDS ${PROJECT_NAME}
+#     )
 
 if(EXISTS "${ARCH_PATH}/build.cmake")
     include(${ARCH_PATH}/build.cmake)

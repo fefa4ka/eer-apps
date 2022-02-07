@@ -1,8 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
 
-set(EER_PATH "/lego/eer")
-include(lego/eer/options.cmake)
-
 project(eeReactApps VERSION 1.0
     DESCRIPTION "Embedded Event-driven React Applications"
     LANGUAGES C)
@@ -26,9 +23,14 @@ if(NOT EXISTS "${PROJECT_SOURCE_DIR}/lego/eer/CMakeLists.txt")
     message(FATAL_ERROR "The submodules were not downloaded! GIT_SUBMODULE was turned off or failed. Please update submodules and try again.")
 endif()
 
+set(EER_PATH "/lego/eer")
+include(lego/eer/options.cmake)
+
 enable_testing()
 
 add_subdirectory(lego)
 
 add_subdirectory(apps/basic)
+
+add_subdirectory(apps/shell)
 

@@ -1,33 +1,28 @@
 #include <IO.h>
-#include <Button.h>
 #include <eers.h>
 #include <version.h>
 
-pin_t sensor_pin = hw_pin(D, 2);
-IO_new(sensor, _({
-                   .io = &hw.io,
-                   .pin = &sensor_pin,
-                   .mode = IO_INPUT,
-               }));
+bool indicator_value = true;
+pin_t indicator_pin = hw_pin(D, 3);
+void indicator_toggle(eer_t *indicator) {
+    indicator_value = !indicator_value;
+}
 
-pin_t indicator_pin = hw_pin(D, 2);
 IO_new(indicator, _({
-                   .io = &hw.io,
-                   .pin = &indicator_pin,
-                   .mode = IO_OUTPUT,
-               }));
+                      .io   = &hw(gpio),
+                      .pin  = &indicator_pin,
+                      .mode = IO_OUTPUT,
+                      .on = { .change = indicator_toggle }
+                  }));
 
-int main(void) {
-  bool debug = false;
+int main(void)
+{
 
-  // Event-loop
-  loop(sensor) {
-    // Debug Step
-    debug = !debug;
-
-    apply(IO, indicator,
-          _({
-              .level = debug,
-          }));
-  }
+    loop()
+    {
+        apply(IO, indicator,
+              _({
+                  .level = indicator_value,
+              }));
+    }
 }

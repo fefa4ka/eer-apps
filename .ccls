@@ -1,6 +1,14 @@
 %compile_commands.json
 -DPROJECT_NAME=undefined
--HAL_dbg=1
+-DHAL_dbg=1
+-DHAL_atmega328p=1
+-DHAL_gpio
+-DHAL_adc
+-DHAL_uart
+-DHAL_timer
+-DHAL_spi
+-DF_CPU=0
+-D__AVR_ATmega328P__
 -DEER_PROFILER
 -DNDEBUG
 -DTIMESTAMP=0
@@ -19,5 +27,8 @@
 -I./lego/SPIPeriphery
 -I./lego/Bitbang
 -I./lego/Serial
+-I./lego/Menu
 -I./lego/eer/include
+-I./lego/eer/hal/avr
+-I./lego/eer/hal/x86_64
 
