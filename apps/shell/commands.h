@@ -4,7 +4,7 @@
 #include <Serial.h>
 
 #define BAUDRATE            9600
-#define BUFFER_SIZE         32
+#define BUFFER_SIZE         128
 #define COMMAND_BUFFER_SIZE 16
 
 extern char     command[COMMAND_BUFFER_SIZE];

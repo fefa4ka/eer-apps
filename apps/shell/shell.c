@@ -37,9 +37,9 @@ Menu(tty, _({.menu    = commands,
 /**
  * \brief    Echo each symbol from input to output
  */
-void read_symbol(eer_t *uart)
+void read_symbol(eer_t *uart_ptr)
 {
-    Serial_write(uart, eer_state(Serial, uart, sending));
+    Serial_write(&uart, eer_state(Serial, &uart, sending));
 }
 
 /**
@@ -71,8 +71,6 @@ Serial(uart,
 
 int main(void)
 {
-    // Welcom log
-    print_version(0);
     print_shell(0);
 
     loop(clk, uart, tty)
