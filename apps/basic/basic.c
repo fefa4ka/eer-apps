@@ -3,9 +3,10 @@
 #include <version.h>
 
 bool indicator_value = true;
-pin_t indicator_pin = hw_pin(D, 3);
+pin_t indicator_pin = hw_pin(A, 12);
 void indicator_toggle(eer_t *indicator) {
     indicator_value = !indicator_value;
+    printf("Toggle %d\n", indicator_value);
 }
 
 IO_new(indicator, _({
