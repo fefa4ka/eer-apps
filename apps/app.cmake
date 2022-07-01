@@ -1,5 +1,7 @@
 add_executable(${PROJECT_NAME} ${PROJECT_NAME}.c ${SOURCES})
 
+target_compile_definitions(${PROJECT_NAME} PRIVATE PROJECT_NAME=${PROJECT_NAME} VERSION=${PROJECT_VERSION})
+
 if(CMAKE_CROSSCOMPILING AND CMAKE_BUILD_TYPE MATCHES Debug)
     add_custom_command(
         TARGET ${PROJECT_NAME}
@@ -25,7 +27,23 @@ add_definitions(${HAL_LIBS_DEFS})
 target_link_libraries(${PROJECT_NAME} ${LIBS} ${HAL_LIBS})
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
-configure_file(${EER_LIB_PATH}/include/version.h.in version.h)
+
+# Board Support Configuration
+find_package(yq QUIET)
+
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/bsc.yml)
+    execute_process(COMMAND yq -jr ".${BOARD} |
+    [ paths(scalars) as $p
+    | [ ( [ $p[] | tostring | ascii_upcase ] | join(\"_\") )
+        , ( getpath($p) | tostring )
+        ]
+        | join(\"=\")
+      ] | join(\";\")
+    " ${CMAKE_CURRENT_SOURCE_DIR}/bsc.yml
+    OUTPUT_VARIABLE BOARD_DEFINITIONS)
+    message(STATUS "Board Support Config for ${PROJECT_NAME} ${BOARD}: ${BOARD_DEFINITIONS}")
+    target_compile_definitions(${PROJECT_NAME} PRIVATE ${BOARD_DEFINITIONS})
+endif()
 
 # TODO: calculate size
 # get_property(${project_name}_linked_libs target ${project_name} property link_interface_libraries)

@@ -1,0 +1,8 @@
+dbg:
+    indicator: {port: I, pin: 1}
+ch573_evt:
+    cpu: {frequency: CLK_SOURCE_PLL_60MHz}
+    indicator: {port: B, pin: 12}
+uno:
+    cpu: {frequency: 8000000}
+    indicator: {port: B, pin: 5}

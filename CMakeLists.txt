@@ -34,4 +34,5 @@ add_subdirectory(apps/basic)
 
 add_subdirectory(apps/shell)
 
+add_subdirectory(apps/button_tick)
 add_subdirectory(apps/tick)
