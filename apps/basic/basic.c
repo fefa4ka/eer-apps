@@ -1,5 +1,6 @@
 #include <IO.h>
-#include <eers.h>
+#include <eer_app.h>
+
 
 bool  indicator_value = true;
 pin_t indicator_pin   = hw_pin(B, 12);
@@ -11,13 +12,15 @@ IO_new(indicator, _({
                       .on = { .change = indicator_toggle }
                   }));
 
+
 int main(void)
 {
-    loop()
-    {
-        apply(IO, indicator,
-              _({
-                  .level = indicator_value,
-              }));
-    }
+    ignite();
+
+    apply(IO, indicator,
+          _({
+              .level = indicator_value,
+          }));
+
+    halt(0);
 }

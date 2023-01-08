@@ -1,10 +1,25 @@
 /* Used components */
 #include "commands.h"
-#include <IO.h>
+#include <Chip.h>
 #include <Clock.h>
-#include <Serial.h>
+#include <IO.h>
 #include <Menu.h>
-#include <eers.h>
+#include <Serial.h>
+#include <eer_app.h>
+
+
+Chip(sys,
+    _({
+        .on = {
+            .boot = print_version,
+            .ready = print_shell,
+        }
+    }),
+    _({
+        .frequency = {.cpu = CPU_FREQUENCY},
+        .sys       = &hw(sys),
+    })
+);
 
 // https://github.com/MightyPork/avr-lib/blob/master/lib/uart.h - useful
 // terminal
@@ -13,7 +28,8 @@ Clock(clk, &hw(timer), TIMESTAMP);
 
 /* indicator */
 bool  is_led_on = false;
-pin_t led_pin   = hw_pin(B, 1);
+pin_t led_pin   = hw_pin(INDICATOR_PORT, INDICATOR_PIN);
+void  led_toggle(eer_t *indicator) { is_led_on = !is_led_on; }
 IO_new(led, _({
                 .io   = &hw(gpio),
                 .pin  = &led_pin,
@@ -47,7 +63,7 @@ void read_symbol(eer_t *uart_ptr)
  */
 void read_command(eer_t *uart)
 {
-    char *    command_symbol = command;
+    char     *command_symbol = command;
     lr_data_t data;
 
     while (Serial_read(uart, &data) == OK && data) {
@@ -64,22 +80,31 @@ Serial(uart,
           .baudrate = BAUDRATE,
           .buffer   = &buffer,
           .on       = {
-              .receive_block = read_command, /* Read and execute command */
-              .receive       = read_symbol,  /* Echo input */
+                    .receive_block = read_command, /* Read and execute command */
+                    .receive       = read_symbol   /* Echo input */
           }}));
 
 
+/* Application */
+void
+shell() {
+    ignite(uart, tty);
+}
+
 int main(void)
 {
-    print_shell(0);
+    clk.props.onSecond = &led_toggle;
 
-    loop(clk, uart, tty)
-    {
-        apply(IO, led,
-              _({
-                  .level = is_led_on,
-              }));
-    }
+    ignite(sys, clk);
 
-    return 0;
+    shell();
+
+    apply(IO, led,
+          _({
+              .level = is_led_on,
+          }));
+
+    halt(0);
 }
+
+

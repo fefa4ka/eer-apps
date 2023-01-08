@@ -3,7 +3,7 @@ project(shell VERSION 1.0
     LANGUAGES C)
 
 set(SOURCES commands.c)
-set(LIBS IO Clock Serial Menu)
-set(HAL_LIBS gpio timer uart)
+set(LIBS Chip IO Clock Serial Menu)
+set(HAL_LIBS gpio timer uart sys ble)
 
 include(../app.cmake)
