@@ -3,7 +3,7 @@
 ```
 mkdir build
 
-cmake -DCMAKE_BUILD_TYPE=Debug ../
+cmake -DCMAKE_C_COMPILER=gcc-12 -DPROFILING=True -DCMAKE_BUILD_TYPE=Debug ../
 cmake --build .
 ```
 
