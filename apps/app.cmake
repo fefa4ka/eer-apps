@@ -34,21 +34,18 @@ find_package(yq QUIET)
 if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/bsc.yml)
     execute_process(COMMAND yq -o=json ".${BOARD}" ${CMAKE_CURRENT_SOURCE_DIR}/bsc.yml
         OUTPUT_VARIABLE BOARD_DEFINITIONS_JSON)
-    message(STATUS "Board Support Config JSON for ${PROJECT_NAME} ${BOARD}: ${BOARD_DEFINITIONS}")
-endif()
 
-if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/bsc.yml)
     execute_process(COMMAND bash -c "echo -e '${BOARD_DEFINITIONS_JSON}' | jq -rj '
     [ paths(scalars) as $p
     | [ ( [ $p[] | tostring | ascii_upcase ] | join(\"_\") )
-        , ( getpath($p) | tostring )
-        ]
-        | join(\"=\")
-      ] | join(\";\")
+    , ( getpath($p) | tostring )
+    ]
+    | join(\"=\")
+    ] | join(\";\")
     '"
     OUTPUT_VARIABLE BOARD_DEFINITIONS)
-    message(STATUS "Board Support Config for ${PROJECT_NAME} ${BOARD}: ${BOARD_DEFINITIONS}")
-    target_compile_definitions(${PROJECT_NAME} PRIVATE ${BOARD_DEFINITIONS})
+message(STATUS "Board Support Config for ${PROJECT_NAME} ${BOARD}: ${BOARD_DEFINITIONS}")
+target_compile_definitions(${PROJECT_NAME} PRIVATE ${BOARD_DEFINITIONS})
 endif()
 
 # TODO: calculate size

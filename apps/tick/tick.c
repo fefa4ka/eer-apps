@@ -1,8 +1,16 @@
-//#include <Button.h>
+#include <Chip.h>
 #include <Clock.h>
 #include <IO.h>
 #include <eers.h>
 #include <sys.h>
+
+Chip(sys,
+    _({}),
+    _({
+        .frequency = {.cpu = CPU_FREQUENCY},
+        .sys       = &hw(sys),
+    })
+);
 
 Clock(clk, &hw(timer), TIMESTAMP);
 
@@ -17,11 +25,9 @@ IO_new(indicator, _({
 
 int main(void)
 {
-    enum ch573_clock_source clock = CPU_FREQUENCY;
-    eer_hw_sys.clock.set(&clock);
     clk.props.onSecond = &indicator_toggle;
 
-    loop(clk)
+    loop(sys, clk)
     {
         apply(IO, indicator,
               _({

@@ -174,7 +174,7 @@ void dump_memory(char *request)
     address_hex[4]        = '\0';
     void *address_pointer = (void *)hexdec(address_hex);
 
-    int size = itoa((long)(address_hex + 5));
+    int size = (int)*(char *)itoa((long)(address_hex + 5));
 
     for (int i = 0; i < size; i++) {
         log_memory(address_pointer++);

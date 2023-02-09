@@ -1,9 +1,18 @@
 #include <Button.h>
+#include <Chip.h>
 #include <Clock.h>
 #include <IO.h>
 #include <eer_app.h>
 #include <sys.h>
 
+
+Chip(sys,
+    _({}),
+    _({
+        .frequency = {.cpu = CPU_FREQUENCY},
+        .sys       = &hw(sys),
+    })
+);
 
 Clock(clk, &hw(timer), TIMESTAMP);
 
@@ -27,10 +36,7 @@ Button(belt_sensor, _({
 
 int main(void)
 {
-    eer_sys_clk_source_t clk_source = CPU_FREQUENCY;
-    eer_hw_sys.clock.set(&clk_source);
-
-    ignite(clk);
+    ignite(sys, clk);
 
     with(belt_sensor)
     {
