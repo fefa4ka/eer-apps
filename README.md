@@ -10,7 +10,7 @@ cmake --build .
 # Target Build
 
 ```
-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../lego/eer/toolchain/generic-gcc-riscv.cmake -DHAL=ch573 ../
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../lego/eer/toolchain/generic-gcc-riscv.cmake -DMCU=ch573 -DBOARD=ch573_evt ../
 ```
 
 ## Test Build

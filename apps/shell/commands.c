@@ -6,7 +6,6 @@ typedef struct {
 } divmod10_t;
 
 static char         utoa_buffer[13];
-static unsigned int g_seed = 12312;
 
 static inline void divmodu10(divmod10_t *res, unsigned long n)
 {
@@ -164,7 +163,7 @@ void log_memory(char *data)
 void print_memory(void *address)
 {
     char *address_hex     = address + 5;
-    void *address_pointer = hexdec(address_hex);
+    void *address_pointer = (void *)hexdec(address_hex);
 
     log_memory(address_pointer);
 }
@@ -173,9 +172,9 @@ void dump_memory(char *request)
 {
     char *address_hex     = request + 5;
     address_hex[4]        = '\0';
-    void *address_pointer = hexdec(address_hex);
+    void *address_pointer = (void *)hexdec(address_hex);
 
-    int size = itoa(address_hex + 5);
+    int size = itoa((long)(address_hex + 5));
 
     for (int i = 0; i < size; i++) {
         log_memory(address_pointer++);
@@ -186,10 +185,10 @@ void write_memory(char *request)
 {
     char *address_hex     = request + 5;
     address_hex[4]        = '\0';
-    void *address_pointer = hexdec(address_hex);
+ //   void *address_pointer = (void *)hexdec(address_hex);
 
-    char *value_hex = address_hex + 5;
-    void *value     = hexdec(value_hex);
+//    char *value_hex = address_hex + 5;
+//    void *value     = (void *)hexdec(value_hex);
 }
 
 

@@ -11,7 +11,7 @@
 Chip(sys,
     _({
         .on = {
-            .boot = print_version,
+            .boot = (void (*)(eer_t *))print_version,
             .ready = print_shell,
         }
     }),
@@ -93,6 +93,8 @@ shell() {
 
 int main(void)
 {
+    lr_init(&buffer, BUFFER_SIZE, cells);
+
     clk.props.onSecond = &led_toggle;
 
     ignite(sys, clk);
