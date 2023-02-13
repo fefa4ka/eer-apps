@@ -4,6 +4,9 @@ dbg:
 ch573_evt:
     cpu: {frequency: CLK_SOURCE_PLL_60MHz}
     indicator: {port: B, pin: 12}
+ch32v003_evt:
+    cpu: {frequency: SYSCLK_FREQ_48MHZ_HSI}
+    indicator: {port: A, pin: 12}
 uno:
     cpu: {frequency: 8000000}
     indicator: {port: B, pin: 5}
