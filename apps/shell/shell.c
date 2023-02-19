@@ -41,6 +41,7 @@ char           command[COMMAND_BUFFER_SIZE];
 Menu_command_t commands[] = {{"time", print_time},
                              {"version", print_version},
                              {"read", print_memory, command},
+                             {"write", write_memory, command},
                              {0}};
 
 Menu(tty, _({.menu    = commands,

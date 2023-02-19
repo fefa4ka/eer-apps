@@ -62,9 +62,9 @@ char *itoa(long value)
     return unsigned_string;
 }
 
-void log_string(char *message) { Serial_write_string(&uart, message); }
+void log_string(const char *message) { Serial_write_string(&uart, message); }
 
-void log_num(char *message, long number)
+void log_num(const char *message, long number)
 {
     log_string(message);
     log_string(itoa(number));
@@ -185,10 +185,12 @@ void write_memory(char *request)
 {
     char *address_hex     = request + 5;
     address_hex[4]        = '\0';
- //   void *address_pointer = (void *)hexdec(address_hex);
+    char *address_pointer = (char *)hexdec(address_hex);
 
-//    char *value_hex = address_hex + 5;
-//    void *value     = (void *)hexdec(value_hex);
+    char *value_hex = address_hex + 5;
+    char *value     = (char *)hexdec(value_hex);
+
+    *address_pointer = *value;
 }
 
 
